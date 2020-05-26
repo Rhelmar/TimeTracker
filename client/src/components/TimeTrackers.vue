@@ -5,6 +5,7 @@
             v-bind:timeTracker="timeTracker" 
             v-on:startCounter="startCounter" 
             v-on:pauseCounter="pauseCounter"
+            v-on:resetCounter="resetCounter"
         />
     </div>
 </div>
@@ -33,6 +34,14 @@ export default {
         pauseCounter(id, timePaused) {
             const tracker = this.timeTrackers.filter(timeTracker => timeTracker.id == id)[0];
             tracker.timePaused = timePaused;
+            tracker.isRunning = false;
+            tracker.timeStarted = null;
+            APIService.updateTracker(tracker);
+        },
+        resetCounter(id) {
+            const tracker = this.timeTrackers.filter(timeTracker => timeTracker.id == id)[0];
+            tracker.timeStarted = null;
+            tracker.timePaused = null;
             tracker.isRunning = false;
             APIService.updateTracker(tracker);
         }

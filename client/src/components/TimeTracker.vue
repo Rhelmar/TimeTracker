@@ -24,15 +24,20 @@ export default {
             seconds: "00",
             minutes: "00",
             hours: "00",
-            oldTimePassed: this.timeTracker.timePassed,
+            oldTimePassed: null,
             continueRunning: false,
             isAlreadyRunning: false,
             interval: null
         }
     },
     mounted(){
-        if(this.timeTracker.isRunning || this.timeTracker.timePaused != null){
+        if(this.timeTracker.timePaused != null){
+            this.oldTimePassed = this.timeTracker.timePassed;
+            this.setDisplayTime();
+        }
+        else if(this.timeTracker.isRunning){
             this.continueRunning = true;
+            this.oldTimePassed = null;
             this.startCounter();
         }
     },
@@ -56,8 +61,16 @@ export default {
         updateCounter(){
             const self = this;
             this.interval = setInterval(() => {
-                self.timeTracker.timePassed = new Date() - Date.parse(self.timeTracker.timeStarted);
-                let seconds = Math.floor(self.timeTracker.timePassed / 1000);
+                if(self.oldTimePassed != null){
+                    self.timeTracker.timePassed = (Date.parse(new Date()) + self.oldTimePassed) - Date.parse(self.timeTracker.timeStarted);
+                } else {
+                    self.timeTracker.timePassed = new Date() - Date.parse(self.timeTracker.timeStarted);
+                }
+                self.setDisplayTime();
+            }, 1000)
+        },
+        setDisplayTime(){
+            let seconds = Math.floor(this.timeTracker.timePassed / 1000);
                 let minutes = 0;
                 let hours = 0;
                 if(seconds > 59){
@@ -68,11 +81,9 @@ export default {
                         hours = minutes / 60;
                     }
                 }
-
-                self.hours = hours < 10 ? `0${hours}` : hours;
-                self.minutes = minutes < 10 ? `0${minutes}` : minutes;
-                self.seconds = seconds < 10 ? `0${seconds}` : seconds;
-            }, 1000)
+            this.hours = hours < 10 ? `0${hours}` : hours;
+            this.minutes = minutes < 10 ? `0${minutes}` : minutes;
+            this.seconds = seconds < 10 ? `0${seconds}` : seconds;
         },
         pauseCounter(){
             this.timeTracker.timePaused = new Date();
@@ -84,6 +95,8 @@ export default {
         resetCounter(){
             this.$emit('resetCounter', this.timeTracker.id);
             this.isAlreadyRunning = false;
+            this.continueRunning = false;
+            this.oldTimePassed = null;
             clearInterval(this.interval);
             this.hours = "00";
             this.minutes = "00";

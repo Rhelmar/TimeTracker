@@ -1,5 +1,6 @@
 # TimeTracker
 A widget-based time tracker web application.
-Technologies used:
+## Technologies used:
 Backend: NodeJS with Express
+
 Frontend: VueJS

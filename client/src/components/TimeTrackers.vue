@@ -1,6 +1,6 @@
 <template>
-<div class="widget-container">
-    <div v-for="timeTracker in timeTrackers" v-bind:key="timeTracker._id">
+<div>
+    <div class="widget-container" v-for="timeTracker in timeTrackers" v-bind:key="timeTracker._id">
         <TimeTracker 
             v-bind:timeTracker="timeTracker" 
             v-on:startCounter="startCounter" 

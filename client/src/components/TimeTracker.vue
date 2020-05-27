@@ -8,8 +8,7 @@
             <div class="time">{{ `${hours}:${minutes}:${seconds}` }}</div>
         </div>
         <div class="buttons">
-            <div class="start" @click="startCounter">Start</div>
-            <div class="pause" @click="pauseCounter">Pause</div>
+            <div v-bind:class="getClass()" @click="startPause">{{StartPauseText}}</div>
             <div class="reset" @click="resetCounter">Reset</div>
         </div>
     </div>
@@ -27,24 +26,39 @@ export default {
             oldTimePassed: null,
             continueRunning: false,
             isAlreadyRunning: false,
-            interval: null
+            interval: null,
+            StartPauseText: null
         }
     },
     mounted(){
         if(this.timeTracker.timePaused != null){
             this.oldTimePassed = this.timeTracker.timePassed;
+            this.StartPauseText = "Start";
             this.setDisplayTime();
         }
         else if(this.timeTracker.isRunning){
             this.continueRunning = true;
-            this.oldTimePassed = null;
             this.startCounter();
+        }
+        else {
+            this.StartPauseText = "Start";
         }
     },
     methods: {
+        getClass() {
+            return {
+                'pause': this.timeTracker.isRunning,
+                'start': !this.timeTracker.isRunning
+            }
+        },
+        startPause() {
+            this.timeTracker.isRunning ? this.pauseCounter() : this.startCounter();
+        },
         startCounter(){
             if(!this.isAlreadyRunning){
+                this.StartPauseText = "Pause";
                 if(this.continueRunning){
+                    this.continueRunning = false;
                     this.updateCounter();
                 } else {
                     this.timeTracker.timeStarted = new Date();
@@ -61,7 +75,7 @@ export default {
         updateCounter(){
             const self = this;
             this.interval = setInterval(() => {
-                if(self.oldTimePassed != null){
+                if(self.oldTimePassed != null && self.oldTimePassed != 'NaN'){
                     self.timeTracker.timePassed = (Date.parse(new Date()) + self.oldTimePassed) - Date.parse(self.timeTracker.timeStarted);
                 } else {
                     self.timeTracker.timePassed = new Date() - Date.parse(self.timeTracker.timeStarted);
@@ -90,6 +104,7 @@ export default {
             this.oldTimePassed = this.timeTracker.timePassed;
             this.isAlreadyRunning = false;
             clearInterval(this.interval);
+            this.StartPauseText = "Start";
         },
 
         resetCounter(){
@@ -101,6 +116,7 @@ export default {
             this.hours = "00";
             this.minutes = "00";
             this.seconds = "00";
+            this.StartPauseText = "Start";
         },
     }
 }
@@ -108,7 +124,8 @@ export default {
 
 <style lang="less" scoped>
 .container {
-    background-color: #333;
+    background-color: #222;
+    box-shadow: 0 8px 8px 0;
 }
 
 .grid-container {
@@ -122,16 +139,17 @@ export default {
     background-color: #777;
     color: white;
     grid-column: ~"1 / span 10";
-    margin: 1em;
-    padding: 1em 0 1em 1em;
+    margin: 1rem;
+    padding: 1rem 0 1rem 1rem;
+    font-size: 1.5em;
 }
 .delete:extend(.button) {
     background-color: #ff0000;
     color: white;
     grid-column: ~"span 1 / -1";
-    margin: 1em 1em 1em 0;
+    margin: 1em 1em 1em 0 !important;
     display: table;
-    padding: 0 1em 0 1em;
+    padding: 1.5em !important;
 }
 
 .content {
@@ -151,13 +169,13 @@ export default {
 .buttons {
     display: flex;
     align-content: center;
-    justify-content: center;
+    justify-content: space-between;
 }
 
 .button {
     padding: 1em;
-    margin: 1em;
     cursor: pointer;
+    flex-shrink: 1;
 }
 
 .setColor(@color) {
@@ -172,14 +190,17 @@ export default {
 @reset: #fa0000;
 
 .start:extend(.button) {
-    .setColor(@start)
+    .setColor(@start);
+   margin: 0 0 1em 1em;
 }
 
 .pause:extend(.button) {
-    .setColor(@pause)
+    .setColor(@pause);
+    margin: 0 0 1em 1em;
 }
 
 .reset:extend(.button) {
-   .setColor(@reset)
+   .setColor(@reset);
+   margin: 0 1em 1em 0;
 }
 </style>

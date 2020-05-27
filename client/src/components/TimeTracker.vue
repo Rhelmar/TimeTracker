@@ -70,17 +70,16 @@ export default {
             }, 1000)
         },
         setDisplayTime(){
-            let seconds = Math.floor(this.timeTracker.timePassed / 1000);
-                let minutes = 0;
-                let hours = 0;
-                if(seconds > 59){
-                    seconds = 0;
-                    minutes = seconds / 60;
-                    if(minutes > 59){
-                        minutes = 0;
-                        hours = minutes / 60;
-                    }
-                }
+            let ticks = Math.floor(this.timeTracker.timePassed);
+
+            const secondsUnit = 1000;
+            const minutesUnit = secondsUnit * 60;
+            const hoursUnit = minutesUnit * 60;
+
+            const hours = Math.floor(ticks / hoursUnit);
+            const minutes =  Math.floor((ticks % hoursUnit) / minutesUnit);
+            const seconds  =  Math.floor((ticks % minutesUnit) / secondsUnit);
+            
             this.hours = hours < 10 ? `0${hours}` : hours;
             this.minutes = minutes < 10 ? `0${minutes}` : minutes;
             this.seconds = seconds < 10 ? `0${seconds}` : seconds;

@@ -16,6 +16,9 @@ const TimeTracker = db.define('timeTracker', {
     },
     isRunning: {
         type: Sequelize.BOOLEAN
+    },
+    oldTimePassed: {
+        type: Sequelize.INTEGER
     }
 })
 

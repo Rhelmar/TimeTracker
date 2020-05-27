@@ -31,9 +31,10 @@ export default {
             tracker.isRunning = true;
             APIService.updateTracker(tracker);
         },
-        pauseCounter(id, timePaused) {
+        pauseCounter(id, timePaused, timePassed) {
             const tracker = this.timeTrackers.filter(timeTracker => timeTracker.id == id)[0];
             tracker.timePaused = timePaused;
+            tracker.oldTimePassed = timePassed;
             tracker.isRunning = false;
             tracker.timeStarted = null;
             APIService.updateTracker(tracker);
@@ -43,6 +44,7 @@ export default {
             tracker.timeStarted = null;
             tracker.timePaused = null;
             tracker.isRunning = false;
+            tracker.oldTimePassed = null;
             APIService.updateTracker(tracker);
         }
     },

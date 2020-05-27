@@ -23,7 +23,6 @@ export default {
             seconds: "00",
             minutes: "00",
             hours: "00",
-            oldTimePassed: null,
             continueRunning: false,
             isAlreadyRunning: false,
             interval: null,
@@ -32,7 +31,6 @@ export default {
     },
     mounted(){
         if(this.timeTracker.timePaused != null){
-            this.oldTimePassed = this.timeTracker.timePassed;
             this.StartPauseText = "Start";
             this.setDisplayTime();
         }
@@ -75,8 +73,8 @@ export default {
         updateCounter(){
             const self = this;
             this.interval = setInterval(() => {
-                if(self.oldTimePassed != null && self.oldTimePassed != 'NaN'){
-                    self.timeTracker.timePassed = (Date.parse(new Date()) + self.oldTimePassed) - Date.parse(self.timeTracker.timeStarted);
+                if(self.timeTracker.oldTimePassed != null && self.timeTracker.oldTimePassed != 'NaN'){
+                    self.timeTracker.timePassed = (Date.parse(new Date()) + self.timeTracker.oldTimePassed) - Date.parse(self.timeTracker.timeStarted);
                 } else {
                     self.timeTracker.timePassed = new Date() - Date.parse(self.timeTracker.timeStarted);
                 }
@@ -100,8 +98,7 @@ export default {
         },
         pauseCounter(){
             this.timeTracker.timePaused = new Date();
-            this.$emit('pauseCounter', this.timeTracker.id, this.timeTracker.timePaused);
-            this.oldTimePassed = this.timeTracker.timePassed;
+            this.$emit('pauseCounter', this.timeTracker.id, this.timeTracker.timePaused, this.timeTracker.timePassed)
             this.isAlreadyRunning = false;
             clearInterval(this.interval);
             this.StartPauseText = "Start";
@@ -111,7 +108,6 @@ export default {
             this.$emit('resetCounter', this.timeTracker.id);
             this.isAlreadyRunning = false;
             this.continueRunning = false;
-            this.oldTimePassed = null;
             clearInterval(this.interval);
             this.hours = "00";
             this.minutes = "00";
@@ -141,7 +137,7 @@ export default {
     grid-column: ~"1 / span 10";
     margin: 1rem;
     padding: 1rem 0 1rem 1rem;
-    font-size: 1.5em;
+    font-size: 1.25em;
 }
 .delete:extend(.button) {
     background-color: #ff0000;

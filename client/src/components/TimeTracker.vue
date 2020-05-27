@@ -87,6 +87,7 @@ export default {
         pauseCounter(){
             this.timeTracker.timePaused = new Date();
             this.$emit('pauseCounter', this.timeTracker.id, this.timeTracker.timePaused);
+            this.oldTimePassed = this.timeTracker.timePassed;
             this.isAlreadyRunning = false;
             clearInterval(this.interval);
         },

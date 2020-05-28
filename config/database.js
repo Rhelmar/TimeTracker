@@ -5,7 +5,9 @@ const path = require('path');
 dotenv.config({
     path: __dirname + '/config.env'
 });
-module.exports = new Sequelize('TimeTrackers', 'postgres', process.env.Password, {
+
+console.log(process.env.host);
+module.exports = new Sequelize(process.env.Database, process.env.User, process.env.Password, {
     host: process.env.host,
     dialect: 'postgres',
 

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const url = 'https://timetracker-v2.herokuapp.com:5000/api/trackers';
+const url = `https://timetracker-v2.herokuapp.com/api/trackers`;
 
 class APIService {
     static getTrackers() {

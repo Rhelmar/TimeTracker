@@ -10,17 +10,32 @@ router.get('/', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
+    const tracker = await TimeTracker.create(req.body.tracker);
+    const trackers = await loadTrackers();
+    res.send(trackers);
 });
 
 router.patch('/:id', async (req, res) => {
-    const user = await TimeTracker.update(req.body.tracker, {
+    const tracker = await TimeTracker.update(req.body.tracker, {
         where: {
             id: req.params.id
         }
     })
         .catch(err => console.log(err));
-    console.log(user);
+    const trackers = await loadTrackers();
+    res.send(trackers);
 });
+
+router.delete('/:id', async (req, res) => {    
+    TimeTracker.destroy({
+        where: {
+            id: req.params.id
+        }
+    })
+        .catch(err => console.log(err));
+    const trackers = await loadTrackers();
+    res.send(trackers);
+})
 
 
 async function loadTrackers() {

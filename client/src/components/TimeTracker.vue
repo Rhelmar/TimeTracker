@@ -1,12 +1,12 @@
 <template>
-    <div class="container">
-        <div class="grid-container">
+    <div class="widget-container">
+        <div class="container">
             <input class="name" type="text" v-model=timeTracker.name>
-            <div class="delete">
-                <span class="content">X</span>
+            <div class="delete" @click="deleteTracker">
+                <span class="content">&#10005;</span>
             </div>
-            <div class="time">{{ `${hours}:${minutes}:${seconds}` }}</div>
         </div>
+        <div class="time">{{ `${hours}:${minutes}:${seconds}` }}</div>
         <div class="buttons">
             <div v-bind:class="getClass()" @click="startPause">{{StartPauseText}}</div>
             <div class="reset" @click="resetCounter">Reset</div>
@@ -114,20 +114,26 @@ export default {
             this.seconds = "00";
             this.StartPauseText = "Start";
         },
+        deleteTracker(){
+            this.$emit('deleteTracker', this.timeTracker.id);
+        }
     }
 }
 </script>
 
 <style lang="less" scoped>
-.container {
+@start: #00ff00;
+@pause: #ffed00;
+@red: #ff0000;
+
+.widget-container {
     background-color: #222;
     box-shadow: 0 8px 8px 0;
 }
 
-.grid-container {
+.container {
     display: grid;
     grid-template-columns: repeat(12, 1fr);
-    grid-template-rows: repeat(2, 1fr);
 }
 
 .name {
@@ -137,15 +143,15 @@ export default {
     grid-column: ~"1 / span 10";
     margin: 1rem;
     padding: 1rem 0 1rem 1rem;
-    font-size: 1.25em;
+    font-size: 1.1em;
 }
 .delete:extend(.button) {
     background-color: #ff0000;
-    color: white;
     grid-column: ~"span 1 / -1";
     margin: 1em 1em 1em 0 !important;
     display: table;
-    padding: 1.5em !important;
+    padding: 1.1em !important;
+    .setColor(@red);
 }
 
 .content {
@@ -156,10 +162,9 @@ export default {
 
 .time {
     color: white;
-    grid-row: 2;
-    place-self: center;
-    grid-column: ~"7 / span 2";
     font-size: 1.5em;
+    margin: 1em 0 1em 0;
+    text-align: center;
 }
 
 .buttons {
@@ -177,13 +182,9 @@ export default {
 .setColor(@color) {
     background-color: @color;
     &:hover {
-        background-color: lighten(@color, 10%);
+        background-color: lighten(@color, 15%);
     }
 }
-
-@start: green;
-@pause: #ffed00;
-@reset: #fa0000;
 
 .start:extend(.button) {
     .setColor(@start);
@@ -196,7 +197,7 @@ export default {
 }
 
 .reset:extend(.button) {
-   .setColor(@reset);
+   .setColor(@red);
    margin: 0 1em 1em 0;
 }
 </style>

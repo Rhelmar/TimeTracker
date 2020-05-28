@@ -20,16 +20,20 @@ class APIService {
         });
     }
 
-    static insertTracker(tracker) {
-        return axios.post(url, {
+    static async addTracker(tracker) {
+        return await axios.post(url, {
             tracker
         })
     }
 
-    static updateTracker(tracker) {
-        return axios.patch(`${url}/${tracker.id}`, {
+    static async updateTracker(tracker) {
+        return await axios.patch(`${url}/${tracker.id}`, {
             tracker
         })
+    }
+
+    static async deleteTracker(id) {
+        return await axios.delete(`${url}/${id}`)
     }
 }
 

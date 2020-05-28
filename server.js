@@ -3,11 +3,14 @@ const morgan = require("morgan");
 const dotenv = require("dotenv");
 const cors = require('cors');
 const db = require('./config/database');
+const TimeTracker = require('./models/timeTracker');
 
 // Test DB
 db.authenticate()
     .then(() => console.log('Database connected...'))
     .catch(err => console.log('Error: ' + err));
+
+TimeTracker.sync();
 
 dotenv.config({
     path: './config/config.env'

@@ -3,14 +3,12 @@ const morgan = require("morgan");
 const dotenv = require("dotenv");
 const cors = require('cors');
 const db = require('./config/database');
-const TimeTracker = require('./models/timeTracker');
+const models = require('./models');
 
 // Test DB
 db.authenticate()
     .then(() => console.log('Database connected...'))
     .catch(err => console.log('Error: ' + err));
-
-TimeTracker.sync();
 
 dotenv.config({
     path: './config/config.env'
@@ -36,7 +34,9 @@ if (process.env.NODE_ENV === 'production') {
 
 const port = process.env.PORT || 8000;
 
-app.listen(port, () => {
-    console.log(`Server running in ${process.env.NODE_ENV} mode on port ${port}`);
+models.sequelize.sync().then(() => {
+    app.listen(port, () => {
+        console.log(`Server running in ${process.env.NODE_ENV} mode on port ${port}`);
+    })
 })
 

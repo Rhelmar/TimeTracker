@@ -1,6 +1,6 @@
 const express = require('express');
 const db = require('../../config/database');
-const TimeTracker = require('../../models/timeTracker');
+const models = require('../../models');
 
 const router = express.Router();
 
@@ -10,13 +10,13 @@ router.get('/', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-    const tracker = await TimeTracker.create(req.body.tracker);
+    const tracker = await models.Tracker.create(req.body.tracker);
     const trackers = await loadTrackers();
     res.send(trackers);
 });
 
 router.patch('/:id', async (req, res) => {
-    const tracker = await TimeTracker.update(req.body.tracker, {
+    const tracker = await models.Tracker.update(req.body.tracker, {
         where: {
             id: req.params.id
         }
@@ -27,7 +27,7 @@ router.patch('/:id', async (req, res) => {
 });
 
 router.delete('/:id', async (req, res) => {    
-    TimeTracker.destroy({
+    models.Tracker.destroy({
         where: {
             id: req.params.id
         }
@@ -39,7 +39,7 @@ router.delete('/:id', async (req, res) => {
 
 
 async function loadTrackers() {
-    return await TimeTracker.findAll()
+    return await models.Tracker.findAll()
     .catch (err => console.log(err));
 }
 

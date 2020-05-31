@@ -24,8 +24,10 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 const trackers = require('./routes/api/trackers');
+const users = require('./routes/api/users');
 
 app.use('/api/trackers', trackers);
+app.use('/api/users', users);
 
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static(__dirname + '/public/'));

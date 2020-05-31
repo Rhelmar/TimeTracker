@@ -7,8 +7,8 @@ dotenv.config({
 });
 
 console.log(process.env.host);
-module.exports = new Sequelize(process.env.Database, process.env.User, process.env.Password, {
-    host: process.env.host,
+module.exports = new Sequelize(process.env.DATABASE, process.env.USER, process.env.PASSWORD, {
+    host: process.env.HOST,
     dialect: 'postgres',
 
     pool: {
